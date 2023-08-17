@@ -110,6 +110,15 @@ class Formula:
             The standard string representation of the current formula.
         """
         # Task 1.1
+        root = self.root
+        first = getattr(self, "first", None) or ""
+        second = getattr(self, "second", None) or ""
+        if type(first) is Formula:
+            first = repr(first)
+        if type(second) is Formula:
+            second = repr(second)
+        
+        return f"{root}{first}" if not second else f"({first}{root}{second})"
 
     def __eq__(self, other: object) -> bool:
         """Compares the current formula with the given one.
@@ -146,6 +155,22 @@ class Formula:
             A set of all variable names used in the current formula.
         """
         # Task 1.2
+        _variables = set()
+        if is_variable(self.root):
+            _variables.add(self.root)
+        if hasattr(self, "first"):
+            if type(self.first) is Formula:
+                _variables.update(self.first.variables())
+            else:
+                _variables.add(self.first)
+        if hasattr(self, "second"):
+            if type(self.second) is Formula:
+                _variables.update(self.second.variables())
+            else:
+                _variables.add(self.second)
+
+        return _variables
+
 
     @memoized_parameterless_method
     def operators(self) -> Set[str]:
