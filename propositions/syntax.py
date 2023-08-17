@@ -181,6 +181,24 @@ class Formula:
             current formula.
         """
         # Task 1.3
+        _ops = set()
+        if is_constant(self.root) or is_unary(self.root) or is_binary(self.root):
+            _ops.add(self.root)
+
+        if hasattr(self, "first"):
+            if type(self.first) is Formula:
+                _ops.update(self.first.operators())
+            elif is_constant(self.first) or is_unary(self.first) or is_binary(self.first):
+                _ops.add(self.first)
+        
+        if hasattr(self, "second"):
+            if type(self.second) is Formula:
+                _ops.update(self.second.operators())
+            elif is_constant(self.second) or is_unary(self.second) or is_binary(self.second):
+                _ops.add(self.second)
+
+        return _ops
+
         
     @staticmethod
     def _parse_prefix(string: str) -> Tuple[Union[Formula, None], str]:
